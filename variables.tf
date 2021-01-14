@@ -88,3 +88,10 @@ variable "alb_cert_domain" {
   description = "The domain of cert to use for the internal ALB"
   default     = "*.example.ca"
 }
+
+variable "common_tags" {
+  description = "Common tags for created resources"
+  default = {
+    Application = "Startup Sample"
+  }
+}

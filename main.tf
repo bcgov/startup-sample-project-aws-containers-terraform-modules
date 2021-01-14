@@ -8,10 +8,6 @@ provider "aws" {
 }
 
 locals {
-  //Put all common tags here
-  common_tags = {
-    Project     = "Startup Sample"
-    Environment = "Development"
-  }
+  common_tags        = var.common_tags
   create_ecs_service = var.client_app_image == "" ? 0 : 1
 }
