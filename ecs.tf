@@ -61,7 +61,7 @@ resource "aws_ecs_service" "main" {
 
   network_configuration {
     security_groups  = [aws_security_group.ecs_tasks.id]
-    subnets          = data.aws_subnet_ids.privateapp.ids
+    subnets          = module.network.aws_subnet_ids.app.ids
     assign_public_ip = false
   }
 

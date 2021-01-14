@@ -2,7 +2,7 @@
 
 resource "aws_alb" "main" {
   name            = "sample-load-balancer"
-  subnets         = data.aws_subnet_ids.private.ids
+  subnets         = module.network.aws_subnet_ids.web.ids
   internal        = true
   security_groups = [aws_security_group.lb.id]
 
@@ -13,7 +13,7 @@ resource "aws_alb_target_group" "app" {
   name                 = "sample-target-group"
   port                 = var.client_app_port
   protocol             = "HTTP"
-  vpc_id               = data.aws_vpc.main.id
+  vpc_id               = module.network.aws_vpc.id
   target_type          = "ip"
   deregistration_delay = 30
 
