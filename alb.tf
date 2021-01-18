@@ -11,7 +11,7 @@ resource "aws_alb" "main" {
 
 resource "aws_alb_target_group" "app" {
   name                 = "sample-target-group"
-  port                 = var.client_app_port
+  port                 = var.app_port
   protocol             = "HTTP"
   vpc_id               = module.network.aws_vpc.id
   target_type          = "ip"

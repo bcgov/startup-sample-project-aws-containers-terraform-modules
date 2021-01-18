@@ -12,21 +12,6 @@ resource "aws_ecs_cluster" "main" {
   tags = local.common_tags
 }
 
-data "template_file" "sample_app" {
-  template = file("${path.module}/templates/ecs/sample.json.tpl")
-
-  vars = {
-    app_name       = "sample-app"
-    app_image      = var.client_app_image
-    app_port       = var.client_app_port
-    fargate_cpu    = var.fargate_cpu
-    fargate_memory = var.fargate_memory
-    aws_region     = var.aws_region
-    container_name = var.client_container_name
-    db_name        = var.db_name
-  }
-}
-
 resource "aws_ecs_task_definition" "app" {
   count                    = local.create_ecs_service
   family                   = "sample-app-task"
@@ -36,9 +21,45 @@ resource "aws_ecs_task_definition" "app" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.fargate_cpu
   memory                   = var.fargate_memory
-  container_definitions    = data.template_file.sample_app.rendered
-
-  tags = local.common_tags
+  tags                     = local.common_tags
+  container_definitions = jsonencode([
+    {
+      essential   = true
+      name        = var.container_name
+      image       = var.app_image
+      cpu         = var.fargate_cpu
+      memory      = var.fargate_memory
+      networkMode = "awsvpc"
+      portMappings = [
+        {
+          protocol      = "tcp"
+          containerPort = var.app_port
+          hostPort      = var.app_port
+        }
+      ]
+      environment = [
+        {
+          name  = "DB_NAME"
+          value = var.db_name
+        },
+        {
+          name  = "AWS_REGION",
+          value = var.aws_region
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-create-group  = "true"
+          awslogs-group         = "/ecs/${var.app_name}"
+          awslogs-region        = var.aws_region
+          awslogs-stream-prefix = "ecs"
+        }
+      }
+      mountPoints = []
+      volumesFrom = []
+    }
+  ])
 }
 
 resource "aws_ecs_service" "main" {
@@ -46,7 +67,7 @@ resource "aws_ecs_service" "main" {
   name                              = "sample-service"
   cluster                           = aws_ecs_cluster.main.id
   task_definition                   = aws_ecs_task_definition.app[count.index].arn
-  desired_count                     = var.client_app_count
+  desired_count                     = var.app_count
   enable_ecs_managed_tags           = true
   propagate_tags                    = "TASK_DEFINITION"
   health_check_grace_period_seconds = 60
@@ -67,8 +88,8 @@ resource "aws_ecs_service" "main" {
 
   load_balancer {
     target_group_arn = aws_alb_target_group.app.id
-    container_name   = var.client_container_name
-    container_port   = var.client_app_port
+    container_name   = var.container_name
+    container_port   = var.app_port
   }
 
   depends_on = [aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
