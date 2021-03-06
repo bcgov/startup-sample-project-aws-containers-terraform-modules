@@ -99,12 +99,12 @@ variable "common_tags" {
 
 variable "service_names" {
   description = "List of service names to use as subdomains"
-  default     = ["startup-sample-project", "test"]
+  default     = ["startup-sample-project", "startup-sample-project-2"]
   type        = list(string)
 }
 
 variable "alb_name" {
   description = "Name of the internal alb"
-  default     = "ssp"
+  default     = "default"
   type        = string
 }
