@@ -90,14 +90,21 @@ variable "budget_tag" {
   default     = "Project=Startup Sample"
 }
 
-variable "alb_cert_domain" {
-  description = "The domain of cert to use for the internal ALB"
-  default     = "*.example.ca"
-}
-
 variable "common_tags" {
   description = "Common tags for created resources"
   default = {
     Application = "Startup Sample"
   }
+}
+
+variable "service_names" {
+  description = "List of service names to use as subdomains"
+  default     = ["startup-sample-project", "test"]
+  type        = list(string)
+}
+
+variable "alb_name" {
+  description = "Name of the internal alb"
+  default     = "ssp"
+  type        = string
 }
