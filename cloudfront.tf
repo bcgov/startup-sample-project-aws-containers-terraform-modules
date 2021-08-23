@@ -79,5 +79,5 @@ resource "aws_cloudfront_distribution" "geofencing" {
 }
 
 output "cloudfront_url" {
-  value = "https://${aws_cloudfront_distribution.geofencing.domain_name}/${aws_api_gateway_deployment.samlpost.stage_name}"
+  value = "https://${aws_cloudfront_distribution.geofencing.domain_name}"
 }
