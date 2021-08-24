@@ -1,10 +1,10 @@
 locals {
-  cf_origin_id = "host"
+  cf_origin_id = "123"
 }
 
 resource "aws_cloudfront_distribution" "geofencing" {
-  provider = aws.iam-Perimeter
-
+  
+count = var.cloudfront ? 1 : 0
   
   origin {
     custom_origin_config {
@@ -15,9 +15,8 @@ resource "aws_cloudfront_distribution" "geofencing" {
       "TLSv1.2"]
     }
 
-    domain_name = "https://startup-sample-project.tnfhhm-dev.nimbus.cloud.gov.bc.ca/"
-    origin_id   = "https://startup-sample-project.tnfhhm-dev.nimbus.cloud.gov.bc.ca/"
-
+    domain_name = var.domainname
+    origin_id   = local.cf_origin_id
   }
 
   enabled         = true
@@ -80,4 +79,6 @@ resource "aws_cloudfront_distribution" "geofencing" {
 
 output "cloudfront_url" {
   value = "https://${aws_cloudfront_distribution.geofencing.domain_name}"
+
 }
+
