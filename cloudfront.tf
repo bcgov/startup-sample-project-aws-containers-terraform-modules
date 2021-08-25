@@ -6,9 +6,9 @@ resource "random_integer" "cf_origin_id" {
 }
 
 resource "aws_cloudfront_distribution" "geofencing" {
-  
-count = var.cloudfront ? 1 : 0
-  
+
+  count = var.cloudfront ? 1 : 0
+
   origin {
     custom_origin_config {
       http_port              = 80
@@ -44,9 +44,9 @@ count = var.cloudfront ? 1 : 0
       "PATCH",
       "POST",
     "PUT"]
-    cached_methods   = ["HEAD"]
-    
-    target_origin_id = local.cf_origin_id
+    cached_methods = ["HEAD"]
+
+    target_origin_id = random_integer.cf_origin_id.result
 
     forwarded_values {
       query_string = true
