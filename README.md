@@ -1,18 +1,15 @@
 
-# <application_license_badge>
-<!--- [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE) --->
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
 
 # BC Gov Terraform Template
 
 This repo provides a starting point for users who want to create valid Terraform modules stored in GitHub.  
 
-## Third-Party Products/Libraries used and the licenses they are covered by
-<!--- product/library and path to the LICENSE --->
-<!--- Example: <library_name> - [![GitHub](<shield_icon_link>)](<path_to_library_LICENSE>) --->
-
 ## Project Status
 - [x] Development
 - [ ] Production/Maintenance
+
+[![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)](<Redirect-URL>)
 
 ## Documentation
 <!--- Point to another readme or create a GitHub Pages (https://guides.github.com/features/pages/) --->
