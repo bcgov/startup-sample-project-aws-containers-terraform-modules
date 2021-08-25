@@ -80,7 +80,7 @@ resource "aws_cloudfront_distribution" "geofencing" {
 }
 
 output "cloudfront_url" {
-  value = "https://${aws_cloudfront_distribution.geofencing.domain_name}"
+  value = "https://${aws_cloudfront_distribution.geofencing[0].domain_name}"
 
 }
 
