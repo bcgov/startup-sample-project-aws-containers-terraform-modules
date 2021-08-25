@@ -1,5 +1,8 @@
-locals {
-  cf_origin_id = "123"
+
+
+resource "random_integer" "cf_origin_id" {
+  min = 1
+  max = 100
 }
 
 resource "aws_cloudfront_distribution" "geofencing" {
@@ -15,8 +18,8 @@ count = var.cloudfront ? 1 : 0
       "TLSv1.2"]
     }
 
-    domain_name = var.domainname
-    origin_id   = local.cf_origin_id
+    domain_name = var.cloudfront_origin_domain
+    origin_id   = random_integer.cf_origin_id.result
   }
 
   enabled         = true
@@ -41,9 +44,8 @@ count = var.cloudfront ? 1 : 0
       "PATCH",
       "POST",
     "PUT"]
-    cached_methods = [
-      "GET",
-    "HEAD"]
+    cached_methods   = ["HEAD"]
+    
     target_origin_id = local.cf_origin_id
 
     forwarded_values {

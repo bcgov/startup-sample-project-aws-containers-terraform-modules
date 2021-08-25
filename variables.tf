@@ -111,12 +111,15 @@ variable "alb_name" {
 
 variable "cloudfront" {
   description = "enable or disable the cloudfront distrabution creation"
-  default     = true
   type        = bool
 }
 
-variable "domainname" {
+variable "cloudfront_origin_domain" {
   description = "domain name of the ssp"
-  default     = "https://startup-sample-project.tnfhhm-dev.nimbus.cloud.gov.bc.ca/"
   type        = string
 }
+
+/*variable "cf_origin_id" {
+  description = "id"
+  type        = string
+}*/
