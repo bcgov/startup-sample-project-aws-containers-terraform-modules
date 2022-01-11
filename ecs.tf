@@ -45,6 +45,10 @@ resource "aws_ecs_task_definition" "app" {
         {
           name  = "AWS_REGION",
           value = var.aws_region
+        },
+        {
+          name  = "bucketName",
+          value = aws_s3_bucket.upload_bucket.id
         }
       ]
       logConfiguration = {

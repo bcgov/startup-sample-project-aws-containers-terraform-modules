@@ -1,3 +1,4 @@
+data "aws_caller_identity" "current" {}
 # ECS task execution role data
 data "aws_iam_policy_document" "ecs_task_execution_role" {
   version = "2012-10-17"
@@ -12,7 +13,6 @@ data "aws_iam_policy_document" "ecs_task_execution_role" {
     }
   }
 }
-
 # ECS task execution role
 resource "aws_iam_role" "ecs_task_execution_role" {
   name               = var.ecs_task_execution_role_name
@@ -95,6 +95,34 @@ resource "aws_iam_role_policy" "sample_app_container_cwlogs" {
   }
 EOF
 }
+resource "aws_iam_role_policy" "ssp_bucket_policy" {
+  name   = "upload_bucket_policy"
+  role   = aws_iam_role.sample_app_container_role.id
+  policy = <<-EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "kms:Decrypt",
+                "kms:Encrypt",
+                "s3:PutBucketCORS"
+            ],
+            "Resource": [
+                "${aws_s3_bucket.upload_bucket.arn}",
+                "${aws_s3_bucket.upload_bucket.arn}/*",
+                "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+            ]
+        }
+        
+    ]
+  }
+  EOF
+}
+
 
 resource "aws_iam_role_policy" "sample_app_dynamodb" {
   name = "sample_app_dynamodb"
