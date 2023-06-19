@@ -2,15 +2,26 @@
 
 resource "aws_ecs_cluster" "main" {
   name               = "sample-cluster"
-  capacity_providers = ["FARGATE_SPOT"]
+  # capacity_providers = ["FARGATE_SPOT"]
 
-  default_capacity_provider_strategy {
-    capacity_provider = "FARGATE_SPOT"
-    weight            = 100
-  }
-
+  # default_capacity_provider_strategy {
+  #   capacity_provider = "FARGATE_SPOT"
+  #   weight            = 100
+  # }
   tags = local.common_tags
 }
+resource "aws_ecs_cluster_capacity_providers" "sample" {
+cluster_name = aws_ecs_cluster.main.name
+
+capacity_providers = ["FARGATE_SPOT"]
+
+default_capacity_provider_strategy {
+  weight            = 100
+  capacity_provider = "FARGATE_SPOT"
+}
+}
+
+
 
 resource "aws_ecs_task_definition" "app" {
   count                    = local.create_ecs_service

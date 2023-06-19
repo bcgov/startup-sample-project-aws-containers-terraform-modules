@@ -5,6 +5,5 @@ resource "random_pet" "upload_bucket_name" {
 
 resource "aws_s3_bucket" "upload_bucket" {
   bucket        = random_pet.upload_bucket_name.id
-  acl           = "private"
   force_destroy = true
 }
