@@ -16,10 +16,12 @@ resource "aws_budgets_budget" "cost" {
     subscriber_sns_topic_arns = [aws_sns_topic.billing_alert_topic.arn]
   }
 
-  cost_filters = {
-    TagKeyValue = "user:Project$Startup Sample"
+  cost_filter {
+    name = "TagKeyValue"
+    values = [
+      "user:Project$Startup Sample",
+    ]
   }
-}
 
 
 resource "aws_sns_topic" "billing_alert_topic" {
