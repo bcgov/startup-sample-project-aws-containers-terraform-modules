@@ -22,6 +22,7 @@ resource "aws_budgets_budget" "cost" {
       "user:Project$Startup Sample",
     ]
   }
+}
 
 
 resource "aws_sns_topic" "billing_alert_topic" {
