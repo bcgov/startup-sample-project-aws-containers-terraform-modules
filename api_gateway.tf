@@ -4,7 +4,7 @@ resource "aws_api_gateway_vpc_link" "app" {
   subnet_ids  = module.network.aws_subnet_ids.web.ids
 }
 
-resource "aws_apigatewayv2_api" "app`" {
+resource "aws_apigatewayv2_api" "app" {
   name          = var.app_name
   protocol_type = "HTTP"
 }
