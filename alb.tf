@@ -12,7 +12,7 @@ resource "aws_alb" "app-alb" {
 resource "aws_alb_listener" "internal" {
   load_balancer_arn = aws_alb.app-alb.arn
   port              = "80"
-  protocol          = "TCP"
+  protocol          = "HTTP"
 
   default_action {
     type             = "forward"
