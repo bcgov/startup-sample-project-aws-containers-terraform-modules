@@ -4,7 +4,7 @@ resource "aws_alb" "app-alb" {
   name                             = var.app_name
   internal                         = true
   subnets                          = module.network.aws_subnet_ids.web.ids
-  security_groups                  = module.network.aws_security_groups.web.ids
+  security_groups                  = [module.network.aws_security_groups.web.id]
   enable_cross_zone_load_balancing = true
   tags                             = local.common_tags
 
