@@ -4,7 +4,7 @@ resource "aws_alb" "app-alb" {
   name               = var.app_name
   internal           = true
   subnets            = module.network.aws_subnets.web.ids
-  security_groups    = module.network_load_balancer_arns
+  security_groups    = module.network.aws_security_groups.web.ids
   enable_cross_zone_load_balancing = true
   tags = local.common_tags
 
@@ -16,7 +16,7 @@ resource "aws_lb_listener" "internal" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.example.arn
+    target_group_arn = aws_lb_target_group.app.arn
   }
 
 }
@@ -41,12 +41,9 @@ resource "aws_alb_target_group" "app" {
   tags = local.common_tags
 }
 
-resource "aws_lb_listener_rule" "host_based_weighted_routing" {
-  listener_arn = data.aws_alb_listener.front_end.arn
-
   default_action {
     type             = "forward"
     target_group_arn = aws_alb_target_group.app.arn
   }
 
-}
+
