@@ -19,13 +19,13 @@ resource "aws_apigatewayv2_integration" "app" {
 }
 
 resource "aws_apigatewayv2_route" "app" {
-  api_id = aws_apigatewayv2_api.app.id
+  api_id    = aws_apigatewayv2_api.app.id
   route_key = "ANY /{proxy+}"
-  target = "integrations/${aws_apigatewayv2_integration.app.id}"
+  target    = "integrations/${aws_apigatewayv2_integration.app.id}"
 }
 
 resource "aws_apigatewayv2_stage" "app" {
-  api_id = aws_apigatewayv2_api.app.id
-  name = "$default"
+  api_id      = aws_apigatewayv2_api.app.id
+  name        = "$default"
   auto_deploy = true
 }

@@ -1,12 +1,12 @@
 # alb.tf
 resource "aws_alb" "app-alb" {
 
-  name               = var.app_name
-  internal           = true
-  subnets            = module.network.aws_subnets.web.ids
-  security_groups    = module.network.aws_security_groups.web.ids
+  name                             = var.app_name
+  internal                         = true
+  subnets                          = module.network.aws_subnets.web.ids
+  security_groups                  = module.network.aws_security_groups.web.ids
   enable_cross_zone_load_balancing = true
-  tags = local.common_tags
+  tags                             = local.common_tags
 
 }
 resource "aws_lb_listener" "internal" {
@@ -41,9 +41,5 @@ resource "aws_alb_target_group" "app" {
   tags = local.common_tags
 }
 
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_alb_target_group.app.arn
-  }
 
 
