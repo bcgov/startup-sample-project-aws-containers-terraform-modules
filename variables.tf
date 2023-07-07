@@ -97,8 +97,3 @@ variable "cloudfront" {
   description = "enable or disable the cloudfront distrabution creation"
   type        = bool
 }
-
-variable "cloudfront_origin_domain" {
-  description = "domain name of the ssp"
-  type        = string
-}
