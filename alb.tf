@@ -1,17 +1,28 @@
 # alb.tf
+resource "aws_alb" "app-alb" {
 
-# Use the default ALB that is pre-provisioned as part of the account creation
-# This ALB has all traffic on *.LICENSE-PLATE-ENV.nimbus.cloud.gob.bc.ca routed to it
-data "aws_alb" "main" {
-  name = var.alb_name
+  name                             = var.app_name
+  internal                         = true
+  subnets                          = module.network.aws_subnet_ids.web.ids
+  security_groups                  = [module.network.aws_security_groups.web.id]
+  enable_cross_zone_load_balancing = true
+  tags                             = local.common_tags
+
+  lifecycle {
+    ignore_changes = [access_logs]
+  }
 }
+resource "aws_alb_listener" "internal" {
+  load_balancer_arn = aws_alb.app-alb.arn
+  port              = "80"
+  protocol          = "HTTP"
 
-# Redirect all traffic from the ALB to the target group
-data "aws_alb_listener" "front_end" {
-  load_balancer_arn = data.aws_alb.main.id
-  port              = 443
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.app.arn
+  }
+
 }
-
 resource "aws_alb_target_group" "app" {
   name                 = "sample-target-group"
   port                 = var.app_port
@@ -33,17 +44,5 @@ resource "aws_alb_target_group" "app" {
   tags = local.common_tags
 }
 
-resource "aws_lb_listener_rule" "host_based_weighted_routing" {
-  listener_arn = data.aws_alb_listener.front_end.arn
 
-  action {
-    type             = "forward"
-    target_group_arn = aws_alb_target_group.app.arn
-  }
 
-  condition {
-    host_header {
-      values = [for sn in var.service_names : "${sn}.*"]
-    }
-  }
-}

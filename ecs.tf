@@ -1,7 +1,7 @@
 # ecs.tf
 
 resource "aws_ecs_cluster" "main" {
-  name               = "sample-cluster"
+  name = "sample-cluster"
   # capacity_providers = ["FARGATE_SPOT"]
 
   # default_capacity_provider_strategy {
@@ -11,14 +11,14 @@ resource "aws_ecs_cluster" "main" {
   tags = local.common_tags
 }
 resource "aws_ecs_cluster_capacity_providers" "sample" {
-cluster_name = aws_ecs_cluster.main.name
+  cluster_name = aws_ecs_cluster.main.name
 
-capacity_providers = ["FARGATE_SPOT"]
+  capacity_providers = ["FARGATE_SPOT"]
 
-default_capacity_provider_strategy {
-  weight            = 100
-  capacity_provider = "FARGATE_SPOT"
-}
+  default_capacity_provider_strategy {
+    weight            = 100
+    capacity_provider = "FARGATE_SPOT"
+  }
 }
 
 
@@ -107,7 +107,7 @@ resource "aws_ecs_service" "main" {
     container_port   = var.app_port
   }
 
-  depends_on = [data.aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
+  depends_on = [aws_iam_role_policy_attachment.ecs_task_execution_role]
 
   tags = local.common_tags
 }

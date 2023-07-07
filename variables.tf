@@ -93,29 +93,7 @@ variable "common_tags" {
   }
 }
 
-variable "service_names" {
-  description = "List of service names to use as subdomains"
-  default     = ["startup-sample-project", "ssp"]
-  type        = list(string)
-}
-
-variable "alb_name" {
-  description = "Name of the internal alb"
-  default     = "default"
-  type        = string
-}
-
 variable "cloudfront" {
   description = "enable or disable the cloudfront distrabution creation"
   type        = bool
 }
-
-variable "cloudfront_origin_domain" {
-  description = "domain name of the ssp"
-  type        = string
-}
-
-/*variable "cf_origin_id" {
-  description = "id"
-  type        = string
-}*/
