@@ -1,4 +1,4 @@
-resource "aws_api_gateway_vpc_link" "app" {
+resource "aws_apigatewayv2_vpc_link" "app" {
   name        = var.app_name
   description = "app VPC link for API gateway"
   subnet_ids  = module.network.aws_subnet_ids.web.ids

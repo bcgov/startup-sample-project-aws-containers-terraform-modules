@@ -3,20 +3,20 @@ resource "aws_alb" "app-alb" {
 
   name                             = var.app_name
   internal                         = true
-  subnets                          = module.network.aws_subnets.web.ids
+  subnets                          = module.network.aws_subnet_ids.web.ids
   security_groups                  = module.network.aws_security_groups.web.ids
   enable_cross_zone_load_balancing = true
   tags                             = local.common_tags
 
 }
 resource "aws_lb_listener" "internal" {
-  load_balancer_arn = aws_lb.app-alb.arn
+  load_balancer_arn = aws_alb.app-alb.arn
   port              = "80"
   protocol          = "TCP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.app.arn
+    target_group_arn = aws_alb_target_group.app.arn
   }
 
 }
