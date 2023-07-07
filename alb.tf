@@ -9,7 +9,7 @@ resource "aws_alb" "app-alb" {
   tags                             = local.common_tags
 
 }
-resource "aws_lb_listener" "internal" {
+resource "aws_alb_listener" "internal" {
   load_balancer_arn = aws_alb.app-alb.arn
   port              = "80"
   protocol          = "TCP"

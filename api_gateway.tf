@@ -1,7 +1,8 @@
 resource "aws_apigatewayv2_vpc_link" "app" {
   name        = var.app_name
-  description = "app VPC link for API gateway"
   subnet_ids  = module.network.aws_subnet_ids.web.ids
+  security_groups_ids                  = module.network.aws_security_groups.web.ids
+  enable_cross_zone_load_balancing = true
 }
 
 resource "aws_apigatewayv2_api" "app" {
@@ -12,7 +13,7 @@ resource "aws_apigatewayv2_api" "app" {
 resource "aws_apigatewayv2_integration" "app" {
   api_id             = aws_apigatewayv2_api.app.id
   integration_type   = "HTTP_PROXY"
-  connection_id      = aws_api_gateway_vpc_link.app.id
+  connection_id      = aws_apigatewayv2_vpc_link.app.id
   connection_type    = "VPC_LINK"
   integration_method = "ANY"
   integration_uri    = aws_alb_listener.internal.arn
