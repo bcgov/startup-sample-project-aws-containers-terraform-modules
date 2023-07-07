@@ -1,8 +1,7 @@
 resource "aws_apigatewayv2_vpc_link" "app" {
-  name        = var.app_name
-  subnet_ids  = module.network.aws_subnet_ids.web.ids
-  security_groups_ids                  = module.network.aws_security_groups.web.ids
-  enable_cross_zone_load_balancing = true
+  name               = var.app_name
+  subnet_ids         = module.network.aws_subnet_ids.web.ids
+  security_group_ids = module.network.aws_security_groups.web.ids
 }
 
 resource "aws_apigatewayv2_api" "app" {
