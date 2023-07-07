@@ -18,7 +18,7 @@ resource "aws_cloudfront_distribution" "geofencing" {
       "TLSv1.2"]
     }
 
-    domain_name = var.cloudfront_origin_domain
+    domain_name = aws_apigatewayv2_api.app.api_endpoint
     origin_id   = random_integer.cf_origin_id.result
   }
 
