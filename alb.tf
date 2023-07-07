@@ -8,6 +8,9 @@ resource "aws_alb" "app-alb" {
   enable_cross_zone_load_balancing = true
   tags                             = local.common_tags
 
+  lifecycle {
+    ignore_changes = [access_logs]
+  }
 }
 resource "aws_alb_listener" "internal" {
   load_balancer_arn = aws_alb.app-alb.arn
