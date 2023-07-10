@@ -56,7 +56,10 @@ resource "aws_cloudfront_distribution" "geofencing" {
       "POST",
       "PUT"
     ]
-    cached_methods = []
+    cached_methods = [
+      "GET",
+      "HEAD"
+    ]
 
     target_origin_id         = random_integer.cf_origin_id.result
     cache_policy_id          = data.aws_cloudfront_cache_policy.default.id
