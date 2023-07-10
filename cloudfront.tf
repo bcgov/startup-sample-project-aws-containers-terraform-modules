@@ -5,6 +5,18 @@ resource "random_integer" "cf_origin_id" {
   max = 100
 }
 
+data "aws_cloudfront_cache_policy" "default" {
+  # Docs for the manged cache policy
+  # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/managed-cache-policies.html
+  name = "Managed-CachingDisabled"
+}
+
+data "aws_cloudfront_origin_request_policy" "default" {
+  # Docs for the manged origin request policy
+  # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/managed-origin-request-policies.html
+  name = "Managed-AllViewerExceptHostHeader"
+}
+
 resource "aws_cloudfront_distribution" "geofencing" {
 
   count = var.cloudfront ? 1 : 0
@@ -14,8 +26,7 @@ resource "aws_cloudfront_distribution" "geofencing" {
       http_port              = 80
       https_port             = 443
       origin_protocol_policy = "https-only"
-      origin_ssl_protocols = [
-      "TLSv1.2"]
+      origin_ssl_protocols   = ["TLSv1.2"]
     }
 
     domain_name = trimprefix(aws_apigatewayv2_api.app.api_endpoint, "https://")
@@ -43,23 +54,19 @@ resource "aws_cloudfront_distribution" "geofencing" {
       "OPTIONS",
       "PATCH",
       "POST",
-    "PUT"]
-    cached_methods = ["GET", "HEAD"]
+      "PUT"
+    ]
+    cached_methods = []
 
-    target_origin_id = random_integer.cf_origin_id.result
-
-    forwarded_values {
-      query_string = true
-
-      cookies {
-        forward = "all"
-      }
-    }
+    target_origin_id         = random_integer.cf_origin_id.result
+    cache_policy_id          = data.aws_cloudfront_cache_policy.default.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.default.id
 
     viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
+
+    min_ttl     = 0
+    default_ttl = 3600
+    max_ttl     = 86400
   }
 
   ordered_cache_behavior {
@@ -100,9 +107,3 @@ resource "aws_cloudfront_distribution" "geofencing" {
     cloudfront_default_certificate = true
   }
 }
-
-output "cloudfront_url" {
-  value = "https://${aws_cloudfront_distribution.geofencing[0].domain_name}"
-
-}
-
